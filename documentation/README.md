@@ -34,14 +34,8 @@ Each page has the following structure:
 
 
 ## Administrative Site
-The administration of the site will be performed through a separate React App that communicates
-with a simple API on the Node Express server (in the client subdirectory). This part of the
-application has not been designed yet, but should provide:
 
-- Login capability (probably using Firebase)
-- Ability to authorize a user to edit only content in a local (county) section, only common content, or both.
-- WYSIWYG editor for any HTML Block content
-- Easy-to-use editor for highlighted and standard resources.
+See documentation [here](./administration.md).
 
 It is very important that the administration app be easy to use by non-technical users.
 
