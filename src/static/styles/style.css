@@ -56,3 +56,12 @@ input.gsc-input, .gsc-input-box, .gsc-input-box-hover, .gsc-input-box-focus, .gs
   box-sizing: content-box;
   line-height: normal;
 }
+  
+.modal-body{
+    height: 500px;
+    overflow-y: auto;
+}
+
+.modal-county-links {
+  font-size: 2rem;
+}
