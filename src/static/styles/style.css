@@ -52,16 +52,18 @@ body {
 
 .modal-title {
   text-align: center;
+  font-size: 2rem;
 }
 
 .county-item {
-  padding: 2px 20px;
+  padding: 2px 0px;
 }
 
 .county-button {
   padding: 0px;
   width: 100%;
-  text-align: left;
+  text-align: center;
+  font-size: 2rem;
 }
 
 .county-item:hover {
@@ -83,4 +85,12 @@ input.gsc-input, .gsc-input-box, .gsc-input-box-hover, .gsc-input-box-focus, .gs
 {
   box-sizing: content-box;
   line-height: normal;
+}
+
+
+.modal-body{
+    height: 500px;
+    overflow-y: auto;
+    text-align: center;
+    font-size: 2rem;
 }
