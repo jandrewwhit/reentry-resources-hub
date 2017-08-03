@@ -12,13 +12,13 @@ const CountyModal = (props) => {
 
   const renderCounty = (county, idx) =>
     <div key={idx}>
-      <Button className="modal-county-links" bsStyle="link" href={`/${county}/home`}>
+      <Button bsStyle="link" href={`/${county}/home`}>
         {county}
       </Button>
     </div>;
 
   return (
-    <Modal {...props} bsSize="md" aria-labelledby="contained-modal-title-lg">
+    <Modal {...props} bsSize="sm" aria-labelledby="contained-modal-title-lg">
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-lg">
           North Carolina Reentry Resources Hub
