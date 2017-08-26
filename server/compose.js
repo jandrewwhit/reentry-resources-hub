@@ -1,38 +1,27 @@
 const fs = require('fs');
-const contentDir = require('../config').contentDir;
+const contentDir = './content';
 
 function loadConfig(path, inputConfig, callback) {
-  fs.open(path, 'r', (err, fd) => {
-    if (err) callback(err, null);
-    else {
-      fs.readFile(fd, { encoding: 'utf8' }, (rfErr, data) => {
-        if (rfErr) callback(rfErr, null);
-        else {
-          const configArray = JSON.parse(data);
-          const config = {};
-          configArray.pairs.forEach((item) => {
-            config[item.name] = item.value;
-          });
-          callback(null, Object.assign({}, inputConfig, config));
-        }
-      });
-    }
-  });
+  try {
+    const configArray = JSON.parse(fs.readFileSync(path));
+    const config = {};
+
+    configArray.pairs.forEach((item) => {
+      config[item.name] = item.value;
+    });
+
+    callback(null, Object.assign({}, inputConfig, config));
+  } catch (e) {
+    callback(e);
+  }
 }
 
 function loadJsonFile(path, callback) {
-  fs.open(path, 'r', (err, fd) => {
-    if (err) callback(err, null);
-    else {
-      fs.readFile(fd, { encoding: 'utf8' }, (rfErr, data) => {
-        if (rfErr) callback(rfErr, null);
-        else {
-          const content = JSON.parse(data);
-          callback(null, content);
-        }
-      });
-    }
-  });
+  try {
+    callback(null, JSON.parse(fs.readFileSync(path)));
+  } catch (e) {
+    callback(e);
+  }
 }
 
 // Load and merge all the configurations
@@ -173,7 +162,7 @@ function mainCompose(callback) {
   const mainDescFile = `${contentDir}/topics/main/description.json`;
   const main = {
     config: {},
-    common: {}
+    common: {},
   };
   loadConfig(commonConfigFile, {}, (lc1Err, commonConfigRes) => {
     if (lc1Err) callback(lc1Err, null);
@@ -195,5 +184,5 @@ function mainCompose(callback) {
   });
 }
 
-module.exports = {compose, mainCompose};
+module.exports = { compose, mainCompose };
 

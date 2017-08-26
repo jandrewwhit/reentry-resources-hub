@@ -1,51 +1,52 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { snapshot } from 'react-snapshot';
 import Header from './Header.jsx';
-import Search from './Search.jsx';
 import Content from './Content.jsx';
+import Contact from './Contact.jsx';
 import Footer from './Footer.jsx';
-import * as contentActions from '../actions/contentActions';
 
-class App extends Component {
+export default class App extends Component {
+  state = {
+    content: null,
+  };
+
+  componentWillMount() {
+    this.updateContent(this.props.match);
+  }
+
   componentWillReceiveProps(nextProps) {
-    if (this.props.params !== nextProps.params) {
-      this.props.actions.loadContent(nextProps.params.jurisdiction, nextProps.params.topic);
+    if (this.props.match !== nextProps.match) {
+      this.updateContent(nextProps.match);
     }
+  }
+
+  updateContent({ params }) {
+    const p = snapshot(() => {
+      const url = `/api/${params.jurisdiction}/${params.topic}`;
+
+      return fetch(url)
+        .then(response => (response.ok ? response.json() : Promise.reject(null)));
+    })
+    .then(content => this.setState({ content }));
+
+    // this works around a bug in snapshot where it doesn't return a promise with a .catch() method
+    p && p.catch(e => console.log(e)); // eslint-disable-line
   }
 
   render() {
     return (
-      <div>
-        <Header data={this.props.content} />
-        <Search />
-        <Content data={this.props.content} />
-        <Footer />
-      </div>
+      this.state.content ?
+        <div>
+          <Header {...this.props} data={this.state.content} />
+          {/* I don't love doing this, but wanted to maintain visual consistency amongst views without having to render the Header + Footer components inside of Contact. */}
+          {location.href.includes('contact') ? <Contact /> : <Content data={this.state.content} />}
+          <Footer />
+        </div> : null
     );
   }
 }
 
 App.propTypes = {
-  content: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired,
-  params: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
 };
-
-function mapStateToProps(state) {
-  return {
-    content: state.content,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(contentActions, dispatch),
-  };
-}
-
-// Connect function from react-redux function allows components to interact with redux.
-// These components are called 'container components'.
-// Connect returns a function that is called immediately with the 'App' parameter.
-export default connect(mapStateToProps, mapDispatchToProps)(App);
